@@ -22,6 +22,19 @@
 #include "pbkdf2_test.h"
 #include "ticktime.h"
 
+volatile int Count_ISHAReset = 0;
+volatile int Count_hexstr_to_bytes = 0;
+volatile int Count_hexdigit_to_int = 0;
+volatile int Count_cmp_bin = 0;
+volatile int Count_ISHAInput = 0;
+volatile int Count_ISHAResult = 0;
+volatile int Count_ISHAProcessMessageBlock = 0;
+volatile int Count_hmac_isha = 0;
+volatile int Count_pbkdf2_hmac_isha = 0;
+volatile int Count_F = 0;
+volatile int Count_test_isha = 0;
+volatile int Count_test_hmac_isha = 0;
+volatile int Count_test_pbkdf2_hmac_isha = 0;
 
 /*
  * Times a single call to the pbkdf2_hmac_isha function, and prints
@@ -102,6 +115,20 @@ int main(void) {
 
   printf("Running timing test...\r\n");
   time_pbkdf2_hmac_isha();
+
+  printf("Count_ISHAReset = %d\r\n", Count_ISHAReset);
+  printf("Count_hexstr_to_bytes = %d\r\n", Count_hexstr_to_bytes);
+  printf("Count_hexdigit_to_int = %d\r\n", Count_hexdigit_to_int);
+  printf("Count_cmp_bin = %d\r\n", Count_cmp_bin);
+  printf("Count_ISHAInput = %d\r\n", Count_ISHAInput);
+  printf("Count_ISHAResult = %d\r\n", Count_ISHAResult);
+  printf("Count_ISHAProcessMessageBlock = %d\r\n", Count_ISHAProcessMessageBlock);
+  printf("Count_hmac_isha = %d\r\n", Count_hmac_isha);
+  printf("Count_pbkdf2_hmac_isha = %d\r\n", Count_pbkdf2_hmac_isha);
+  printf("Count_F = %d\r\n", Count_F);
+  printf("Count_test_isha = %d\r\n", Count_test_isha);
+  printf("Count_test_hmac_isha = %d\r\n", Count_test_hmac_isha);
+  printf("Count_test_pbkdf2_hmac_isha = %d\r\n", Count_test_pbkdf2_hmac_isha);
 
   return 0 ;
 }

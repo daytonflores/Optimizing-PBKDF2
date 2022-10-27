@@ -18,6 +18,19 @@
 #define ISHACircularShift(bits,word) \
   ((((word) << (bits)) & 0xFFFFFFFF) | ((word) >> (32-(bits))))
 
+extern volatile int Count_ISHAReset;
+extern volatile int Count_hexstr_to_bytes;
+extern volatile int Count_hexdigit_to_int;
+extern volatile int Count_cmp_bin;
+extern volatile int Count_ISHAInput;
+extern volatile int Count_ISHAResult;
+extern volatile int Count_ISHAProcessMessageBlock;
+extern volatile int Count_hmac_isha;
+extern volatile int Count_pbkdf2_hmac_isha;
+extern volatile int Count_F;
+extern volatile int Count_test_isha;
+extern volatile int Count_test_hmac_isha;
+extern volatile int Count_test_pbkdf2_hmac_isha;
 
 /*  
  * Processes the next 512 bits of the message stored in the MBlock
@@ -28,6 +41,8 @@
  */
 static void ISHAProcessMessageBlock(ISHAContext *ctx)
 {
+  Count_ISHAProcessMessageBlock++;
+
   uint32_t temp; 
   int t;
   uint32_t W[16];
@@ -130,6 +145,8 @@ static void ISHAPadMessage(ISHAContext *ctx)
 
 void ISHAReset(ISHAContext *ctx)
 {
+  Count_ISHAReset++;
+
   ctx->Length_Low  = 0;
   ctx->Length_High = 0;
   ctx->MB_Idx      = 0;
@@ -147,6 +164,8 @@ void ISHAReset(ISHAContext *ctx)
 
 void ISHAResult(ISHAContext *ctx, uint8_t *digest_out)
 {
+  Count_ISHAResult++;
+
   if (ctx->Corrupted)
   {
     return;
@@ -171,6 +190,8 @@ void ISHAResult(ISHAContext *ctx, uint8_t *digest_out)
 
 void ISHAInput(ISHAContext *ctx, const uint8_t *message_array, size_t length)
 {
+  Count_ISHAInput++;
+
   if (!length)
   {
     return;
