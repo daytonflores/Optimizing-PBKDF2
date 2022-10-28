@@ -54,3 +54,12 @@
 | 26666 | ISHAInput      | If ctx->MB_Idx == 64 | 5.89 us                     |
 | 2     | ISHAPadMessage | If ctx->MB_Idx > 55  | 1.00 us                     |
 | 26666 | ISHAPadMessage | Unconditional        | 5.77 us                     |
+
+### hmac_isha()
+
+- During time_pbkdf2_hmac_isha(), the function hmac_isha() is invoked from 2 separate lines:
+
+| Count | Caller         | Invocation Details       | Average Time Per Invocation |
+| ----- | -------------- | ------------------------ | --------------------------- |
+| 42    | F              | Unconditional            | 66.9 us                     |
+| 13285 | F              | For int j=1; j<iter; j++ | 68.7 us                     |
