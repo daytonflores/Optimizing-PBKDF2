@@ -138,10 +138,7 @@ void pbkdf2_hmac_isha(const uint8_t *pass, size_t pass_len,
 
   int l = dkLen / ISHA_DIGESTLEN + 1;
   for (int i=0; i<l; i++) {
-	reset_timer();
     F(pass, pass_len, salt, salt_len, iter, i+1, accumulator + i*ISHA_DIGESTLEN);
-    Duration_0 += get_timer();
-    Count_0++;
   }
   for (size_t i=0; i<dkLen; i++) {
     DK[i] = accumulator[i];
