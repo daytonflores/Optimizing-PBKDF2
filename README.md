@@ -17,7 +17,7 @@
 
 | Count | Total Time | Average Time Per Invocation | Caller                | Invocation Details |
 | ----- | ---------- | --------------------------- | --------------------- | ------------------ |
-| 1     | 8495.0 ms  | 8495.000 ms                 | time_pbkdf2_hmac_isha | Unconditional      |
+| 1     | 8435.0 ms  | 8435.000 ms                 | time_pbkdf2_hmac_isha | Unconditional      |
 
 # F()
 
@@ -44,15 +44,17 @@
 | 13285 | 9124.9 ms  | 0.687 ms                    | F              | For int j=1; j<iter; j++ |
 
 ## Modified
-- Size: 0x00000154
+- Size: 0x00000122
 - Changes made:
 	- Removed if(key_len > ISHA_BLOCKLEN) conditional since code does not ever go into this branch. This introduces limitation of catching case where key_len > ISHA_BLOCKLEN
+	- Combined for(i=0; i<key_len; i++) and for(i=key_len; i<ISHA_BLOCKLEN; i++) loops and added a conditional within loop itself
+	- Combined both for(i=0; i<ISHA_BLOCKLEN; i++) loops
 - During time_pbkdf2_hmac_isha(), the function hmac_isha() is invoked from 2 separate lines:
 
 | Count | Total Time | Average Time Per Invocation | Caller         | Invocation Details       |
 | ----- | ---------- | --------------------------- | -------------- | ------------------------ |
-| 42    | 27.7 ms    | 0.660 ms                    | F              | Unconditional            |
-| 13285 | 8858.1 ms  | 0.667 ms                    | F              | For int j=1; j<iter; j++ |
+| 42    | 27.3 ms    | 0.650 ms                    | F              | Unconditional            |
+| 13285 | 8810.3 ms  | 0.663 ms                    | F              | For int j=1; j<iter; j++ |
 
 # ISHAReset()
 
