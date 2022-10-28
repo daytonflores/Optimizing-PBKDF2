@@ -17,7 +17,7 @@
 
 | Count | Total Time | Average Time Per Invocation | Caller                | Invocation Details |
 | ----- | ---------- | --------------------------- | --------------------- | ------------------ |
-| 1     | 8536.0 ms  | 8536.000 ms                 | time_pbkdf2_hmac_isha | Unconditional      |
+| 1     | 8495.0 ms  | 8495.000 ms                 | time_pbkdf2_hmac_isha | Unconditional      |
 
 # F()
 
@@ -91,7 +91,16 @@
 | 13330 | 1183.6 ms  | 0.089 ms                    | hmac_isha | Outer ISHA                 |
 
 ## Modified
+- Size: 0x000000a0
+- Changes made:
+	- Replaced all instances of (i/4) with (t >> 2)
+- During time_pbkdf2_hmac_isha(), the function ISHAResult() is invoked from 3 separate lines:
 
+| Count | Total Time | Average Time Per Invocation | Caller    | Invocation Details         |
+| ----- | ---------- | --------------------------- | --------- | -------------------------- |
+| 0     | 0.0 ms     | 0.000 ms                    | hmac_isha | If key_len > ISHA_BLOCKLEN |
+| 13330 | 1099.0 ms  | 0.082 ms                    | hmac_isha | Inner ISHA                 |
+| 13330 | 1106.3 ms  | 0.083 ms                    | hmac_isha | Outer ISHA                 |
 
 # ISHAPadMessage()
 

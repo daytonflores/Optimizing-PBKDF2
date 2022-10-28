@@ -138,10 +138,7 @@ static void ISHAPadMessage(ISHAContext *ctx)
   ctx->MBlock[62] = (ctx->Length_Low >> 8) & 0xFF;
   ctx->MBlock[63] = (ctx->Length_Low) & 0xFF;
 
-  reset_timer();
   ISHAProcessMessageBlock(ctx);
-  Duration_2 += get_timer();
-  Count_2++;
 }
 
 
@@ -176,10 +173,10 @@ void ISHAResult(ISHAContext *ctx, uint8_t *digest_out)
   }
 
   for (int i=0; i<20; i+=4) {
-    digest_out[i]   = (ctx->MD[i/4] & 0xff000000) >> 24;
-    digest_out[i+1] = (ctx->MD[i/4] & 0x00ff0000) >> 16;
-    digest_out[i+2] = (ctx->MD[i/4] & 0x0000ff00) >> 8;
-    digest_out[i+3] = (ctx->MD[i/4] & 0x000000ff);
+    digest_out[i]   = (ctx->MD[i >> 2] & 0xff000000) >> 24;
+    digest_out[i+1] = (ctx->MD[i >> 2] & 0x00ff0000) >> 16;
+    digest_out[i+2] = (ctx->MD[i >> 2] & 0x0000ff00) >> 8;
+    digest_out[i+3] = (ctx->MD[i >> 2] & 0x000000ff);
   }
 
   return;
@@ -220,10 +217,7 @@ void ISHAInput(ISHAContext *ctx, const uint8_t *message_array, size_t length)
 
     if (ctx->MB_Idx == 64)
     {
-      reset_timer();
       ISHAProcessMessageBlock(ctx);
-      Duration_0 += get_timer();
-      Count_0++;
     }
 
     message_array++;
