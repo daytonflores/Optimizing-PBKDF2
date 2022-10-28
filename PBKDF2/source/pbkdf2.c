@@ -43,45 +43,22 @@ void hmac_isha(const uint8_t *key, size_t key_len,
 {
   uint8_t ipad[ISHA_BLOCKLEN];
   uint8_t opad[ISHA_BLOCKLEN];
-  uint8_t keypad[ISHA_BLOCKLEN];
   uint8_t inner_digest[ISHA_DIGESTLEN];
   size_t i;
   ISHAContext ctx;
 
-  /*
-  for (i=0; i<key_len; i++){
-    // key_len <= ISHA_BLOCKLEN; copy key into keypad
-    keypad[i] = key[i];
-
-    // XOR key into ipad and opad
-    ipad[i] = keypad[i] ^ 0x36;
-    opad[i] = keypad[i] ^ 0x5c;
-  }
-
-  for(i=key_len; i<ISHA_BLOCKLEN; i++){
-	// zero pad the result
-	keypad[i] = 0x00;
-
-    // XOR key into ipad and opad
-    ipad[i] = keypad[i] ^ 0x36;
-    opad[i] = keypad[i] ^ 0x5c;
-  }
-  */
-
   for (i=0; i<ISHA_BLOCKLEN; i++){
 
-	// key_len <= ISHA_BLOCKLEN; copy key into keypad
+	// key_len <= ISHA_BLOCKLEN; copy key into keypad. XOR key into ipad and opad
 	if(i < key_len){
-	  keypad[i] = key[i];
+	  ipad[i] = key[i] ^ 0x36;
+	  opad[i] = key[i] ^ 0x5c;
 	}
-	// zero pad the result
+	// zero pad the result. XOR key into ipad and opad
 	else{
-	  keypad[i] = 0x00;
+	  ipad[i] = 0x36;
+	  opad[i] = 0x5c;
 	}
-
-    // XOR key into ipad and opad
-    ipad[i] = keypad[i] ^ 0x36;
-    opad[i] = keypad[i] ^ 0x5c;
   }
 
   // Perform inner ISHA
