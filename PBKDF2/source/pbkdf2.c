@@ -10,20 +10,29 @@
 #include <assert.h>
 
 #include "pbkdf2.h"
+#include "ticktime.h"
 
-extern volatile int Count_ISHAReset;
-extern volatile int Count_hexstr_to_bytes;
-extern volatile int Count_hexdigit_to_int;
-extern volatile int Count_cmp_bin;
-extern volatile int Count_ISHAInput;
-extern volatile int Count_ISHAResult;
-extern volatile int Count_ISHAProcessMessageBlock;
-extern volatile int Count_hmac_isha;
-extern volatile int Count_pbkdf2_hmac_isha;
-extern volatile int Count_F;
-extern volatile int Count_test_isha;
-extern volatile int Count_test_hmac_isha;
-extern volatile int Count_test_pbkdf2_hmac_isha;
+extern volatile int Count_0;
+extern volatile int Count_1;
+extern volatile int Count_2;
+extern volatile int Count_3;
+extern volatile int Count_4;
+extern volatile int Count_5;
+extern volatile int Count_6;
+extern volatile int Count_7;
+extern volatile int Count_8;
+extern volatile int Count_9;
+
+extern volatile ticktime_t Duration_0;
+extern volatile ticktime_t Duration_1;
+extern volatile ticktime_t Duration_2;
+extern volatile ticktime_t Duration_3;
+extern volatile ticktime_t Duration_4;
+extern volatile ticktime_t Duration_5;
+extern volatile ticktime_t Duration_6;
+extern volatile ticktime_t Duration_7;
+extern volatile ticktime_t Duration_8;
+extern volatile ticktime_t Duration_9;
 
 /*
  * See function description in pbkdf2.h
@@ -32,8 +41,6 @@ void hmac_isha(const uint8_t *key, size_t key_len,
     const uint8_t *msg, size_t msg_len,
     uint8_t *digest)
 {
-  Count_hmac_isha++;
-
   uint8_t ipad[ISHA_BLOCKLEN];
   uint8_t opad[ISHA_BLOCKLEN];
   uint8_t keypad[ISHA_BLOCKLEN];
@@ -94,8 +101,6 @@ static void F(const uint8_t *pass, size_t pass_len,
     const uint8_t *salt, size_t salt_len,
     int iter, unsigned int blkidx, uint8_t *result)
 {
-  Count_F++;
-
   uint8_t temp[ISHA_DIGESTLEN];
   uint8_t saltplus[2048];
   size_t i;
@@ -128,8 +133,6 @@ static void F(const uint8_t *pass, size_t pass_len,
 void pbkdf2_hmac_isha(const uint8_t *pass, size_t pass_len,
     const uint8_t *salt, size_t salt_len, int iter, size_t dkLen, uint8_t *DK)
 {
-  Count_pbkdf2_hmac_isha++;
-
   uint8_t accumulator[2560];
   assert(dkLen < sizeof(accumulator));
 

@@ -22,19 +22,27 @@
 #include "pbkdf2_test.h"
 #include "ticktime.h"
 
-volatile int Count_ISHAReset = 0;
-volatile int Count_hexstr_to_bytes = 0;
-volatile int Count_hexdigit_to_int = 0;
-volatile int Count_cmp_bin = 0;
-volatile int Count_ISHAInput = 0;
-volatile int Count_ISHAResult = 0;
-volatile int Count_ISHAProcessMessageBlock = 0;
-volatile int Count_hmac_isha = 0;
-volatile int Count_pbkdf2_hmac_isha = 0;
-volatile int Count_F = 0;
-volatile int Count_test_isha = 0;
-volatile int Count_test_hmac_isha = 0;
-volatile int Count_test_pbkdf2_hmac_isha = 0;
+volatile int Count_0 = 0;
+volatile int Count_1 = 0;
+volatile int Count_2 = 0;
+volatile int Count_3 = 0;
+volatile int Count_4 = 0;
+volatile int Count_5 = 0;
+volatile int Count_6 = 0;
+volatile int Count_7 = 0;
+volatile int Count_8 = 0;
+volatile int Count_9 = 0;
+
+volatile ticktime_t Duration_0 = 0;
+volatile ticktime_t Duration_1 = 0;
+volatile ticktime_t Duration_2 = 0;
+volatile ticktime_t Duration_3 = 0;
+volatile ticktime_t Duration_4 = 0;
+volatile ticktime_t Duration_5 = 0;
+volatile ticktime_t Duration_6 = 0;
+volatile ticktime_t Duration_7 = 0;
+volatile ticktime_t Duration_8 = 0;
+volatile ticktime_t Duration_9 = 0;
 
 /*
  * Times a single call to the pbkdf2_hmac_isha function, and prints
@@ -116,19 +124,27 @@ int main(void) {
   printf("Running timing test...\r\n");
   time_pbkdf2_hmac_isha();
 
-  printf("Count_ISHAReset = %d\r\n", Count_ISHAReset);
-  printf("Count_hexstr_to_bytes = %d\r\n", Count_hexstr_to_bytes);
-  printf("Count_hexdigit_to_int = %d\r\n", Count_hexdigit_to_int);
-  printf("Count_cmp_bin = %d\r\n", Count_cmp_bin);
-  printf("Count_ISHAInput = %d\r\n", Count_ISHAInput);
-  printf("Count_ISHAResult = %d\r\n", Count_ISHAResult);
-  printf("Count_ISHAProcessMessageBlock = %d\r\n", Count_ISHAProcessMessageBlock);
-  printf("Count_hmac_isha = %d\r\n", Count_hmac_isha);
-  printf("Count_pbkdf2_hmac_isha = %d\r\n", Count_pbkdf2_hmac_isha);
-  printf("Count_F = %d\r\n", Count_F);
-  printf("Count_test_isha = %d\r\n", Count_test_isha);
-  printf("Count_test_hmac_isha = %d\r\n", Count_test_hmac_isha);
-  printf("Count_test_pbkdf2_hmac_isha = %d\r\n", Count_test_pbkdf2_hmac_isha);
+  printf("Count_0 = %d\r\n", Count_0);
+  printf("Count_1 = %d\r\n", Count_1);
+  printf("Count_2 = %d\r\n", Count_2);
+  printf("Count_3 = %d\r\n", Count_3);
+  printf("Count_4 = %d\r\n", Count_4);
+  printf("Count_5 = %d\r\n", Count_5);
+  printf("Count_6 = %d\r\n", Count_6);
+  printf("Count_7 = %d\r\n", Count_7);
+  printf("Count_8 = %d\r\n", Count_8);
+  printf("Count_9 = %d\r\n", Count_9);
+
+  printf("Duration_0 = %d\r\n", Duration_0);
+  printf("Duration_1 = %d\r\n", Duration_1);
+  printf("Duration_2 = %d\r\n", Duration_2);
+  printf("Duration_3 = %d\r\n", Duration_3);
+  printf("Duration_4 = %d\r\n", Duration_4);
+  printf("Duration_5 = %d\r\n", Duration_5);
+  printf("Duration_6 = %d\r\n", Duration_6);
+  printf("Duration_7 = %d\r\n", Duration_7);
+  printf("Duration_8 = %d\r\n", Duration_8);
+  printf("Duration_9 = %d\r\n", Duration_9);
 
   return 0 ;
 }

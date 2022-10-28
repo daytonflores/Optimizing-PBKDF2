@@ -15,6 +15,7 @@
 #include "isha.h"
 #include "pbkdf2.h"
 #include "pbkdf2_test.h"
+#include "ticktime.h"
 
 extern volatile int Count_ISHAReset;
 extern volatile int Count_hexstr_to_bytes;
@@ -30,6 +31,17 @@ extern volatile int Count_test_isha;
 extern volatile int Count_test_hmac_isha;
 extern volatile int Count_test_pbkdf2_hmac_isha;
 
+extern volatile ticktime_t Duration_0;
+extern volatile ticktime_t Duration_1;
+extern volatile ticktime_t Duration_2;
+extern volatile ticktime_t Duration_3;
+extern volatile ticktime_t Duration_4;
+extern volatile ticktime_t Duration_5;
+extern volatile ticktime_t Duration_6;
+extern volatile ticktime_t Duration_7;
+extern volatile ticktime_t Duration_8;
+extern volatile ticktime_t Duration_9;
+
 /* 
  * Compares two byte strings; returns true if they match, false
  * otherwise
@@ -40,8 +52,6 @@ extern volatile int Count_test_pbkdf2_hmac_isha;
  */
 bool cmp_bin(const uint8_t *b1, const uint8_t *b2, size_t len)
 {
-  Count_cmp_bin++;
-
   for (size_t i=0; i<len; i++)
     if (b1[i] != b2[i])
       return false;
@@ -53,8 +63,6 @@ bool cmp_bin(const uint8_t *b1, const uint8_t *b2, size_t len)
  */
 static unsigned char hexdigit_to_int(char c)
 {
-  Count_hexdigit_to_int++;
-
   if (c >= 'a' && c <= 'f')
     return c - 'a' + 10;
   if (c >= 'A' && c <= 'F')
@@ -91,8 +99,6 @@ void hexstr_to_bytes(uint8_t *out, const char *in_str, size_t binary_len)
  */
 bool test_isha()
 {
-  Count_test_isha++;
-
   typedef struct {
     const char *msg;
     const char *hexdigest;
@@ -165,8 +171,6 @@ bool test_isha()
  */
 bool test_hmac_isha()
 {
-  Count_test_hmac_isha++;
-
   typedef struct {
     const char *key;
     const char *msg;
@@ -211,8 +215,6 @@ bool test_hmac_isha()
  */
 bool test_pbkdf2_hmac_isha()
 {
-  Count_test_pbkdf2_hmac_isha++;
-
   typedef struct {
     const char *pass;
     const char *salt;

@@ -6,7 +6,7 @@
  * Generated linker script file for MKL25Z128xxx4
  * Created from linkscript.ldt by FMCreateLinkLibraries
  * Using Freemarker v2.3.30
- * MCUXpresso IDE v11.6.0 [Build 8187] [2022-07-13] on Oct 26, 2022, 9:25:11 PM
+ * MCUXpresso IDE v11.6.0 [Build 8187] [2022-07-13] on Oct 27, 2022, 8:29:46 PM
  */
 
 INCLUDE "PBKDF2_Debug_library.ld"
