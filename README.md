@@ -92,16 +92,17 @@
 
 ## ISHAProcessMessageBlock()
 
-- Size: 0x00000152
+- Size: 0x0000013e
 - Changes made:
 	- Replaced all instances of (t * 4) with (t << 2)
+	- Combined both for(t = 0; t < 16; t++) loops
 - During time_pbkdf2_hmac_isha(), the function ISHAProcessMessageBlock() is invoked from 3 separate lines:
 
 | Count | Total Time | Average Time Per Invocation | Caller         | Invocation Details   |
 | ----- | ---------- | --------------------------- | -------------- | -------------------- |
-| 26666 | 1573.0 ms  | 0.059 ms                    | ISHAInput      | If ctx->MB_Idx == 64 |
-| 2     | 2.0 ms     | 1.000 ms                    | ISHAPadMessage | If ctx->MB_Idx > 55  |
-| 26668 | 1538.3 ms  | 0.058 ms                    | ISHAPadMessage | Unconditional        |
+| 26666 | 1443.9 ms  | 0.054 ms                    | ISHAInput      | If ctx->MB_Idx == 64 |
+| 2     | 1.0 ms     | 0.500 ms                    | ISHAPadMessage | If ctx->MB_Idx > 55  |
+| 26668 | 1445.0 ms  | 0.054 ms                    | ISHAPadMessage | Unconditional        |
 
 ## ISHAPadMessage()
 
