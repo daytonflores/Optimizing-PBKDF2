@@ -62,10 +62,10 @@ static void ISHAProcessMessageBlock(ISHAContext *ctx)
 
   for(t = 0; t < 16; t++)
   {
-    W[t] = ((uint32_t) ctx->MBlock[t * 4]) << 24;
-    W[t] |= ((uint32_t) ctx->MBlock[t * 4 + 1]) << 16;
-    W[t] |= ((uint32_t) ctx->MBlock[t * 4 + 2]) << 8;
-    W[t] |= ((uint32_t) ctx->MBlock[t * 4 + 3]);
+    W[t] = ((uint32_t) ctx->MBlock[(t << 2)]) << 24;
+    W[t] |= ((uint32_t) ctx->MBlock[(t << 2) + 1]) << 16;
+    W[t] |= ((uint32_t) ctx->MBlock[(t << 2) + 2]) << 8;
+    W[t] |= ((uint32_t) ctx->MBlock[(t << 2) + 3]);
   }
 
   for(t = 0; t < 16; t++)
@@ -119,20 +119,17 @@ static void ISHAPadMessage(ISHAContext *ctx)
 
     ISHAProcessMessageBlock(ctx);
 
-    while(ctx->MB_Idx < 56)
-    {
-      ctx->MBlock[ctx->MB_Idx++] = 0;
-    }
   }
   else
   {
     ctx->MBlock[ctx->MB_Idx++] = 0x80;
-    while(ctx->MB_Idx < 56)
-    {
-      ctx->MBlock[ctx->MB_Idx++] = 0;
-    }
+
   }
 
+  while(ctx->MB_Idx < 56)
+  {
+    ctx->MBlock[ctx->MB_Idx++] = 0;
+  }
   /*
    *  Store the message length as the last 8 octets
    */
