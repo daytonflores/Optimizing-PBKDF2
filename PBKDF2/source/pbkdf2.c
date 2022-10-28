@@ -115,18 +115,12 @@ static void F(const uint8_t *pass, size_t pass_len,
   saltplus[i+2] = (blkidx & 0x0000ff00) >> 8;
   saltplus[i+3] = (blkidx & 0x000000ff);
 
-  reset_timer();
   hmac_isha(pass, pass_len, saltplus, salt_len+4, temp);
-  Duration_0 += get_timer();
-  Count_0++;
   for (int i=0; i<ISHA_DIGESTLEN; i++)
     result[i] = temp[i];
 
   for (int j=1; j<iter; j++) {
-	reset_timer();
     hmac_isha(pass, pass_len, temp, ISHA_DIGESTLEN, temp);
-    Duration_1 += get_timer();
-    Count_1++;
     for (int i=0; i<ISHA_DIGESTLEN; i++)
       result[i] ^= temp[i];
   }
@@ -144,7 +138,10 @@ void pbkdf2_hmac_isha(const uint8_t *pass, size_t pass_len,
 
   int l = dkLen / ISHA_DIGESTLEN + 1;
   for (int i=0; i<l; i++) {
+	reset_timer();
     F(pass, pass_len, salt, salt_len, iter, i+1, accumulator + i*ISHA_DIGESTLEN);
+    Duration_0 += get_timer();
+    Count_0++;
   }
   for (size_t i=0; i<dkLen; i++) {
     DK[i] = accumulator[i];

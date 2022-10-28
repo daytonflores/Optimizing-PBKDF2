@@ -63,3 +63,11 @@
 | ----- | -------------- | ------------------------ | --------------------------- |
 | 42    | F              | Unconditional            | 66.9 us                     |
 | 13285 | F              | For int j=1; j<iter; j++ | 68.7 us                     |
+
+### F()
+
+- During time_pbkdf2_hmac_isha(), the function F() is invoked from 1 separate line:
+
+| Count | Caller           | Invocation Details       | Average Time Per Invocation |
+| ----- | ---------------- | ------------------------ | --------------------------- |
+| 42    | pbkdf2_hmac_isha | For int i=0; i<l; i++    | 22575.95 us                 |
