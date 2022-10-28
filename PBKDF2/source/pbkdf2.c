@@ -48,22 +48,11 @@ void hmac_isha(const uint8_t *key, size_t key_len,
   size_t i;
   ISHAContext ctx;
 
-  if (key_len > ISHA_BLOCKLEN) {
-    // If key_len > ISHA_BLOCKLEN reset it to key=ISHA(key)
-    ISHAReset(&ctx);
-    ISHAInput(&ctx, key, key_len);
-    reset_timer();
-    ISHAResult(&ctx, keypad);
-    Duration_0 += get_timer();
-    Count_0++;
-
-  } else {
     // key_len <= ISHA_BLOCKLEN; copy key into keypad, zero pad the result
     for (i=0; i<key_len; i++)
       keypad[i] = key[i];
     for(i=key_len; i<ISHA_BLOCKLEN; i++)
       keypad[i] = 0x00;
-  }
 
   // XOR key into ipad and opad
   for (i=0; i<ISHA_BLOCKLEN; i++) {
@@ -75,19 +64,13 @@ void hmac_isha(const uint8_t *key, size_t key_len,
   ISHAReset(&ctx);
   ISHAInput(&ctx, ipad, ISHA_BLOCKLEN);
   ISHAInput(&ctx, msg, msg_len);
-  reset_timer();
   ISHAResult(&ctx, inner_digest);
-  Duration_1 += get_timer();
-  Count_1++;
 
   // perform outer ISHA
   ISHAReset(&ctx);
   ISHAInput(&ctx, opad, ISHA_BLOCKLEN);
   ISHAInput(&ctx, inner_digest, ISHA_DIGESTLEN);
-  reset_timer();
   ISHAResult(&ctx, digest);
-  Duration_2 += get_timer();
-  Count_2++;
 }
 
 
@@ -124,12 +107,18 @@ static void F(const uint8_t *pass, size_t pass_len,
   saltplus[i+2] = (blkidx & 0x0000ff00) >> 8;
   saltplus[i+3] = (blkidx & 0x000000ff);
 
+  reset_timer();
   hmac_isha(pass, pass_len, saltplus, salt_len+4, temp);
+  Duration_0 += get_timer();
+  Count_0++;
   for (int i=0; i<ISHA_DIGESTLEN; i++)
     result[i] = temp[i];
 
   for (int j=1; j<iter; j++) {
+	  reset_timer();
     hmac_isha(pass, pass_len, temp, ISHA_DIGESTLEN, temp);
+    Duration_1 += get_timer();
+    Count_1++;
     for (int i=0; i<ISHA_DIGESTLEN; i++)
       result[i] ^= temp[i];
   }
