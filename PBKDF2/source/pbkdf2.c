@@ -52,10 +52,7 @@ void hmac_isha(const uint8_t *key, size_t key_len,
     // If key_len > ISHA_BLOCKLEN reset it to key=ISHA(key)
     ISHAReset(&ctx);
     ISHAInput(&ctx, key, key_len);
-	reset_timer();
     ISHAResult(&ctx, keypad);
-    Duration_0 += get_timer();
-    Count_0++;
 
   } else {
     // key_len <= ISHA_BLOCKLEN; copy key into keypad, zero pad the result
@@ -75,19 +72,13 @@ void hmac_isha(const uint8_t *key, size_t key_len,
   ISHAReset(&ctx);
   ISHAInput(&ctx, ipad, ISHA_BLOCKLEN);
   ISHAInput(&ctx, msg, msg_len);
-  reset_timer();
   ISHAResult(&ctx, inner_digest);
-  Duration_1 += get_timer();
-  Count_1++;
 
   // perform outer ISHA
   ISHAReset(&ctx);
   ISHAInput(&ctx, opad, ISHA_BLOCKLEN);
   ISHAInput(&ctx, inner_digest, ISHA_DIGESTLEN);
-  reset_timer();
   ISHAResult(&ctx, digest);
-  Duration_2 += get_timer();
-  Count_2++;
 }
 
 

@@ -37,3 +37,11 @@
 | 13330 | hmac_isha | Inner ISHA                 | 8.88 us                     |
 | 13330 | hmac_isha | Outer ISHA                 | 8.88 us                     |
 
+### ISHAPadMessage()
+
+- During time_pbkdf2_hmac_isha(), the function ISHAPadMessage() is invoked from 1 separate line:
+
+| Count | Caller     | Invocation Details | Average Time Per Invocation |
+| ----- | ---------- | ------------------ | --------------------------- |
+| 26668 | ISHAResult | If !ctx->Computed  | 7.75 us                     |
+

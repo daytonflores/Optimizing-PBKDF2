@@ -175,7 +175,10 @@ void ISHAResult(ISHAContext *ctx, uint8_t *digest_out)
 
   if (!ctx->Computed)
   {
+	reset_timer();
     ISHAPadMessage(ctx);
+    Duration_0 += get_timer();
+    Count_0++;
     ctx->Computed = 1;
   }
 
