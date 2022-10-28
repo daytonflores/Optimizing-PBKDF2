@@ -45,3 +45,12 @@
 | ----- | ---------- | ------------------ | --------------------------- |
 | 26668 | ISHAResult | If !ctx->Computed  | 7.75 us                     |
 
+### ISHAProcessMessageBlock()
+
+- During time_pbkdf2_hmac_isha(), the function ISHAProcessMessageBlock() is invoked from 3 separate lines:
+
+| Count | Caller         | Invocation Details   | Average Time Per Invocation |
+| ----- | -------------- | -------------------- | --------------------------- |
+| 26666 | ISHAInput      | If ctx->MB_Idx == 64 | 5.89 us                     |
+| 2     | ISHAPadMessage | If ctx->MB_Idx > 55  | 1.00 us                     |
+| 26666 | ISHAPadMessage | Unconditional        | 5.77 us                     |

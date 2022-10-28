@@ -117,7 +117,10 @@ static void ISHAPadMessage(ISHAContext *ctx)
       ctx->MBlock[ctx->MB_Idx++] = 0;
     }
 
+    reset_timer();
     ISHAProcessMessageBlock(ctx);
+    Duration_1 += get_timer();
+    Count_1++;
 
     while(ctx->MB_Idx < 56)
     {
@@ -145,7 +148,10 @@ static void ISHAPadMessage(ISHAContext *ctx)
   ctx->MBlock[62] = (ctx->Length_Low >> 8) & 0xFF;
   ctx->MBlock[63] = (ctx->Length_Low) & 0xFF;
 
+  reset_timer();
   ISHAProcessMessageBlock(ctx);
+  Duration_2 += get_timer();
+  Count_2++;
 }
 
 
@@ -175,10 +181,7 @@ void ISHAResult(ISHAContext *ctx, uint8_t *digest_out)
 
   if (!ctx->Computed)
   {
-	reset_timer();
     ISHAPadMessage(ctx);
-    Duration_0 += get_timer();
-    Count_0++;
     ctx->Computed = 1;
   }
 
@@ -227,7 +230,10 @@ void ISHAInput(ISHAContext *ctx, const uint8_t *message_array, size_t length)
 
     if (ctx->MB_Idx == 64)
     {
+      reset_timer();
       ISHAProcessMessageBlock(ctx);
+      Duration_0 += get_timer();
+      Count_0++;
     }
 
     message_array++;
