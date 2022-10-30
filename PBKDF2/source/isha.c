@@ -51,7 +51,6 @@ static void ISHAProcessMessageBlock(ISHAContext *ctx)
 {
   uint32_t temp; 
   register int t;
-  uint32_t W[16];
   uint32_t A, B, C, D, E;
 
   A = ctx->MD[0];
@@ -62,12 +61,13 @@ static void ISHAProcessMessageBlock(ISHAContext *ctx)
 
   for(t = 0; t < 16; t++)
   {
-    W[t] = ((uint32_t) ctx->MBlock[(t << 2)]) << 24;
-    W[t] |= ((uint32_t) ctx->MBlock[(t << 2) + 1]) << 16;
-    W[t] |= ((uint32_t) ctx->MBlock[(t << 2) + 2]) << 8;
-    W[t] |= ((uint32_t) ctx->MBlock[(t << 2) + 3]);
 
-    temp = ISHACircularShift(5,A) + ((B & C) | ((~B) & D)) + E + W[t];
+    temp = ISHACircularShift(5,A) + ((B & C) | ((~B) & D)) + E +
+    		(((uint32_t) ctx->MBlock[(t << 2)]) << 24
+            | ((uint32_t) ctx->MBlock[(t << 2) + 1]) << 16
+            | ((uint32_t) ctx->MBlock[(t << 2) + 2]) << 8
+            | ((uint32_t) ctx->MBlock[(t << 2) + 3]));
+
     temp &= 0xFFFFFFFF;
     E = D;
     D = C;

@@ -25,6 +25,7 @@ main()
                                                                                |
                                                                                *-----> ISHAProcessMessageBlock()
 </pre>
+
 # Entire Program
 - Build Configuration            : Release
 - Optimization                   : -O0
@@ -32,7 +33,7 @@ main()
 - Total Size Before Optimization : 19708
 - Total Size After Optimization  : 
 - Timing Test Before Optimization: 8752 ms
-- Timing Test After Optimization : 6603 ms
+- Timing Test After Optimization : 6007 ms
 
 # pbkdf2_hmac_isha()
 - Size Before Optimization: 0x00000108
@@ -132,10 +133,11 @@ main()
 	- Replaced all instances of (t * 4) with (t << 2)
 	- Combined both for(t = 0; t < 16; t++) loops
 	- Defined iterator t as register storage
+	- Removed W array and assigned directly into temp. This may decrease readability but increases performance
 - During time_pbkdf2_hmac_isha(), the function ISHAProcessMessageBlock() is invoked from 3 separate lines:
 
 | Count | Total Time Before Optimization (Deep : Surface) | Total Time After Optimization (Deep : Surface) | Caller                | Invocation Details         |
 | ----- | ----------------------------------------------- | ---------------------------------------------- | --------------------- | -------------------------- |
-| 24576 | 1404 ms : 1404 ms                               | 1091 ms : 1091 ms                              | ISHAInput             | If ctx->MB_Idx == 64       |
-| 0     | 0    ms : 0    ms                               | 0    ms : 0    ms                              | ISHAPadMessage        | If ctx->MB_Idx > 55        |
-| 24576 | 1462 ms : 1462 ms                               | 1091 ms : 1091 ms                              | ISHAPadMessage        | Unconditional              |
+| 24576 | 1404 ms : 1404 ms                               | 853 ms : 853 ms                                | ISHAInput             | If ctx->MB_Idx == 64       |
+| 0     | 0    ms : 0    ms                               | 0   ms : 0   ms                                | ISHAPadMessage        | If ctx->MB_Idx > 55        |
+| 24576 | 1462 ms : 1462 ms                               | 851 ms : 851 ms                                | ISHAPadMessage        | Unconditional              |
