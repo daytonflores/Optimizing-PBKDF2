@@ -135,16 +135,16 @@ int main(void) {
   printf("Count_8 = %d\r\n", Count_8);
   printf("Count_9 = %d\r\n", Count_9);
 
-  printf("Duration_0 = %d\r\n", Duration_0);
-  printf("Duration_1 = %d\r\n", Duration_1);
-  printf("Duration_2 = %d\r\n", Duration_2);
-  printf("Duration_3 = %d\r\n", Duration_3);
-  printf("Duration_4 = %d\r\n", Duration_4);
-  printf("Duration_5 = %d\r\n", Duration_5);
-  printf("Duration_6 = %d\r\n", Duration_6);
-  printf("Duration_7 = %d\r\n", Duration_7);
-  printf("Duration_8 = %d\r\n", Duration_8);
-  printf("Duration_9 = %d\r\n", Duration_9);
+  printf("Duration_0 = %d\r\n", Duration_0/10);
+  printf("Duration_1 = %d\r\n", Duration_1/10);
+  printf("Duration_2 = %d\r\n", Duration_2/10);
+  printf("Duration_3 = %d\r\n", Duration_3/10);
+  printf("Duration_4 = %d\r\n", Duration_4/10);
+  printf("Duration_5 = %d\r\n", Duration_5/10);
+  printf("Duration_6 = %d\r\n", Duration_6/10);
+  printf("Duration_7 = %d\r\n", Duration_7/10);
+  printf("Duration_8 = %d\r\n", Duration_8/10);
+  printf("Duration_9 = %d\r\n", Duration_9/10);
 
   return 0 ;
 }
