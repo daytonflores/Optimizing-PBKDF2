@@ -1,6 +1,29 @@
 # PES-Assignment-5
  Code for Assign 5 for PRES, ECEN 5813-001B, Fall 2022
 
+# Function Call Tree
+main
+ |
+ *-----> time_pbkdf2_hmac_isha
+                   |
+                   *-----> pbkdf2_hmac_isha
+                                 |
+                                 *-----> F
+                                         | 
+                                         *-----> hmac_isha
+                                                     |
+                                                     *-----> ISHAReset
+                                                     |
+                                                     *-----> ISHAInput
+                                                     |           |
+                                                     |           *-----> ISHAProcessMessageBlock
+                                                     |
+                                                     *-----> ISHAResult
+                                                                 |
+                                                                 *-----> ISHAPadMessage
+                                                                               |
+                                                                               *-----> ISHAProcessMessageBlock
+
 # pbkdf2_hmac_isha() - Original
 - Size: 0x00000128
 - During time_pbkdf2_hmac_isha(), the function pbkdf2_hmac_isha() is invoked from 1 separate line:
