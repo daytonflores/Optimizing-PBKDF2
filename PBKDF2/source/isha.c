@@ -50,7 +50,7 @@ extern volatile ticktime_t Duration_9;
 static void ISHAProcessMessageBlock(ISHAContext *ctx)
 {
   uint32_t temp; 
-  int t;
+  register int t;
   uint32_t W[16];
   uint32_t A, B, C, D, E;
 
@@ -185,7 +185,9 @@ void ISHAResult(ISHAContext *ctx, uint8_t *digest_out)
 
 void ISHAInput(ISHAContext *ctx, const uint8_t *message_array, size_t length)
 {
-  if (!length)
+  register size_t i = length;
+
+  if (!i)
   {
     return;
   }
@@ -196,7 +198,7 @@ void ISHAInput(ISHAContext *ctx, const uint8_t *message_array, size_t length)
     return;
   }
 
-  while(length-- && !ctx->Corrupted)
+  while(i-- && !ctx->Corrupted)
   {
     ctx->MBlock[ctx->MB_Idx++] = (*message_array & 0xFF);
 

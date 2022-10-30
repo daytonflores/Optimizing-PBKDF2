@@ -44,7 +44,7 @@ void hmac_isha(const uint8_t *key, size_t key_len,
   uint8_t ipad[ISHA_BLOCKLEN];
   uint8_t opad[ISHA_BLOCKLEN];
   uint8_t inner_digest[ISHA_DIGESTLEN];
-  size_t i;
+  register size_t i;
   ISHAContext ctx;
 
   for (i=0; i<ISHA_BLOCKLEN; i++){
@@ -96,7 +96,7 @@ static void F(const uint8_t *pass, size_t pass_len,
 {
   uint8_t temp[ISHA_DIGESTLEN];
   uint8_t saltplus[2048];
-  size_t i;
+  register size_t i;
   assert(salt_len + 4 <= sizeof(saltplus));
 
   for (i=0; i<salt_len; i++)
@@ -108,19 +108,13 @@ static void F(const uint8_t *pass, size_t pass_len,
   saltplus[i+2] = (blkidx & 0x0000ff00) >> 8;
   saltplus[i+3] = (blkidx & 0x000000ff);
 
-  reset_timer();
   hmac_isha(pass, pass_len, saltplus, salt_len+4, temp);
-  Duration_0 += get_timer();
-  Count_0++;
-  for (int i=0; i<ISHA_DIGESTLEN; i++)
+  for (i=0; i<ISHA_DIGESTLEN; i++)
     result[i] = temp[i];
 
   for (int j=1; j<iter; j++) {
-	reset_timer();
     hmac_isha(pass, pass_len, temp, ISHA_DIGESTLEN, temp);
-    Duration_1 += get_timer();
-    Count_1++;
-    for (int i=0; i<ISHA_DIGESTLEN; i++)
+    for (i=0; i<ISHA_DIGESTLEN; i++)
       result[i] ^= temp[i];
   }
 }
