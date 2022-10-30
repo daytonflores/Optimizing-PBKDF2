@@ -33,7 +33,7 @@ main()
 - Total Size Before Optimization : 19708
 - Total Size After Optimization  : 
 - Timing Test Before Optimization: 8752 ms
-- Timing Test After Optimization : 5821 ms
+- Timing Test After Optimization : 5735 ms
 
 # pbkdf2_hmac_isha()
 - Size Before Optimization: 0x00000108
@@ -93,15 +93,16 @@ main()
 - Changes:
 	- Stored length into register iterator i and replaced all instances of length with iterator i
 	- Removed ctx->corrupted flag
+	- Incremented message_length in-line
 - During time_pbkdf2_hmac_isha(), the function ISHAInput() is invoked from 5 separate lines:
 
 | Count | Total Time Before Optimization (Deep : Surface) | Total Time After Optimization (Deep : Surface) | Caller                | Invocation Details         |
 | ----- | ----------------------------------------------- | ---------------------------------------------- | --------------------- | -------------------------- |
 | 0     | 0    ms : 0    ms                               | N/A                                            | hmac_isha             | If key_len > ISHA_BLOCKLEN |
-| 12288 | 1996 ms : 1250 ms                               | 1537 ms : 1131 ms                              | hmac_isha             | Inner ISHA - ipad          |
-| 12288 | 417  ms : 399  ms                               | 372  ms : 363  ms                              | hmac_isha             | Inner ISHA - msg           |
-| 12288 | 2000 ms : 1249 ms                               | 1543 ms : 1117 ms                              | hmac_isha             | Outer ISHA - opad          |
-| 12288 | 417  ms : 409  ms                               | 378  ms : 376  ms                              | hmac_isha             | Outer ISHA - inner_digest  |
+| 12288 | 1996 ms : 1250 ms                               |  ms :  ms                              | hmac_isha             | Inner ISHA - ipad          |
+| 12288 | 417  ms : 399  ms                               |   ms :   ms                              | hmac_isha             | Inner ISHA - msg           |
+| 12288 | 2000 ms : 1249 ms                               |  ms :  ms                              | hmac_isha             | Outer ISHA - opad          |
+| 12288 | 417  ms : 409  ms                               |   ms :   ms                              | hmac_isha             | Outer ISHA - inner_digest  |
 
 # ISHAResult()
 - Size Before Optimization: 0x000000c0

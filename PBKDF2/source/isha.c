@@ -193,7 +193,7 @@ void ISHAInput(ISHAContext *ctx, const uint8_t *message_array, size_t length)
 
   while(i--)
   {
-    ctx->MBlock[ctx->MB_Idx++] = (*message_array & 0xFF);
+    ctx->MBlock[ctx->MB_Idx++] = (*(message_array++) & 0xFF);
 
     ctx->Length_Low += 8;
     /* Force it to 32 bits */
@@ -215,7 +215,6 @@ void ISHAInput(ISHAContext *ctx, const uint8_t *message_array, size_t length)
       ISHAProcessMessageBlock(ctx);
     }
 
-    message_array++;
   }
 }
 
