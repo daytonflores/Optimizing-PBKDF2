@@ -2,6 +2,7 @@
  Code for Assign 5 for PRES, ECEN 5813-001B, Fall 2022
 
 # Function Call Tree
+<pre>
 main()
  |
  *-----> time_pbkdf2_hmac_isha()
@@ -23,7 +24,7 @@ main()
                                                                  *-----> ISHAPadMessage()
                                                                                |
                                                                                *-----> ISHAProcessMessageBlock()
-
+</pre>
 # Entire Program
 - Build Configuration            : Release
 - Optimization                   : -O0
@@ -37,7 +38,7 @@ main()
 - Size Before Optimization: 0x00000108
 - Size After Optimization: 
 - Changes:
-	- 
+	- None
 - During time_pbkdf2_hmac_isha(), the function pbkdf2_hmac_isha() is invoked from 1 separate line:
 
 | Count | Total Time Before Optimization (Deep : Surface) | Total Time After Optimization (Deep : Surface) | Caller                | Invocation Details         |
@@ -48,7 +49,7 @@ main()
 - Size Before Optimization: 0x000001b8
 - Size After Optimization: 
 - Changes:
-	- 
+	- None
 - During time_pbkdf2_hmac_isha(), the function F() is invoked from 1 separate line:
 
 | Count | Total Time Before Optimization (Deep : Surface) | Total Time After Optimization (Deep : Surface) | Caller                | Invocation Details         |
@@ -58,7 +59,7 @@ main()
 # hmac_isha()
 - Size Before Optimization: 0x00000184
 - Size After Optimization: 0x00000112
-- Changes made:
+- Changes:
 	- Removed if(key_len > ISHA_BLOCKLEN) conditional since code does not ever go into this branch. This introduces limitation of catching case where key_len > ISHA_BLOCKLEN
 	- Combined for(i=0; i<key_len; i++) and for(i=key_len; i<ISHA_BLOCKLEN; i++) loops and added a conditional within loop itself
 	- Combined both for(i=0; i<ISHA_BLOCKLEN; i++) loops
@@ -74,7 +75,7 @@ main()
 - Size Before Optimization: 0x00000060
 - Size After Optimization: 
 - Changes:
-	- 
+	- None
 - During time_pbkdf2_hmac_isha(), the function ISHAReset() is invoked from 3 separate lines:
 
 | Count | Total Time Before Optimization (Deep : Surface) | Total Time After Optimization (Deep : Surface) | Caller                | Invocation Details         |
@@ -87,7 +88,7 @@ main()
 - Size Before Optimization: 0x000000ae
 - Size After Optimization: 
 - Changes:
-	- 
+	- None
 - During time_pbkdf2_hmac_isha(), the function ISHAInput() is invoked from 5 separate lines:
 
 | Count | Total Time Before Optimization (Deep : Surface) | Total Time After Optimization (Deep : Surface) | Caller                | Invocation Details         |
@@ -101,7 +102,7 @@ main()
 # ISHAResult()
 - Size Before Optimization: 0x000000c0
 - Size After Optimization: 0x000000a0
-- Changes made:
+- Changes:
 	- Replaced all instances of (i/4) with (t >> 2)
 - During time_pbkdf2_hmac_isha(), the function ISHAResult() is invoked from 3 separate lines:
 
@@ -114,7 +115,7 @@ main()
 # ISHAPadMessage()
 - Size Before Optimization: 0x0000010e
 - Size After Optimization: 0x000000f2
-- Changes made:
+- Changes:
 	- Removed while(ctx->MB_Idx < 56) loops out of if/else and put it after since it is unconditional
 - During time_pbkdf2_hmac_isha(), the function ISHAPadMessage() is invoked from 1 separate line:
 
@@ -125,7 +126,7 @@ main()
 # ISHAProcessMessageBlock
 - Size Before Optimization: 0x00000152
 - Size After Optimization: 0x0000013e
-- Changes made:
+- Changes:
 	- Replaced all instances of (t * 4) with (t << 2)
 	- Combined both for(t = 0; t < 16; t++) loops
 - During time_pbkdf2_hmac_isha(), the function ISHAProcessMessageBlock() is invoked from 3 separate lines:
