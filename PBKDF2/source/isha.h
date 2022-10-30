@@ -29,7 +29,6 @@ typedef struct
   int MB_Idx;            // Index into message block array
 
   int Computed;          // Is the digest computed?
-  int Corrupted;         // Is the message digest corruped?
 } ISHAContext;
 
 

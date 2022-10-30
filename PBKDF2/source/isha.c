@@ -155,17 +155,11 @@ void ISHAReset(ISHAContext *ctx)
   ctx->MD[4]       = 0xC3D2E1F0;
 
   ctx->Computed    = 0;
-  ctx->Corrupted   = 0;
 }
 
 
 void ISHAResult(ISHAContext *ctx, uint8_t *digest_out)
 {
-  if (ctx->Corrupted)
-  {
-    return;
-  }
-
   if (!ctx->Computed)
   {
     ISHAPadMessage(ctx);
@@ -192,13 +186,12 @@ void ISHAInput(ISHAContext *ctx, const uint8_t *message_array, size_t length)
     return;
   }
 
-  if (ctx->Computed || ctx->Corrupted)
+  if (ctx->Computed)
   {
-    ctx->Corrupted = 1;
     return;
   }
 
-  while(i-- && !ctx->Corrupted)
+  while(i--)
   {
     ctx->MBlock[ctx->MB_Idx++] = (*message_array & 0xFF);
 
@@ -213,7 +206,7 @@ void ISHAInput(ISHAContext *ctx, const uint8_t *message_array, size_t length)
       if (ctx->Length_High == 0)
       {
         /* Message is too long */
-        ctx->Corrupted = 1;
+    	break;
       }
     }
 
