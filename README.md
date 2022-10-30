@@ -2,66 +2,62 @@
  Code for Assign 5 for PRES, ECEN 5813-001B, Fall 2022
 
 # Function Call Tree
-main
+main()
  |
- *-----> time_pbkdf2_hmac_isha
+ *-----> time_pbkdf2_hmac_isha()
                    |
-                   *-----> pbkdf2_hmac_isha
+                   *-----> pbkdf2_hmac_isha()
                                  |
-                                 *-----> F
+                                 *-----> F()
                                          | 
-                                         *-----> hmac_isha
+                                         *-----> hmac_isha()
                                                      |
-                                                     *-----> ISHAReset
+                                                     *-----> ISHAReset()
                                                      |
-                                                     *-----> ISHAInput
+                                                     *-----> ISHAInput()
                                                      |           |
-                                                     |           *-----> ISHAProcessMessageBlock
+                                                     |           *-----> ISHAProcessMessageBlock()
                                                      |
-                                                     *-----> ISHAResult
+                                                     *-----> ISHAResult()
                                                                  |
-                                                                 *-----> ISHAPadMessage
+                                                                 *-----> ISHAPadMessage()
                                                                                |
-                                                                               *-----> ISHAProcessMessageBlock
+                                                                               *-----> ISHAProcessMessageBlock()
 
-# pbkdf2_hmac_isha() - Original
-- Size: 0x00000128
+# Entire Program
+- Build Configuration            : Release
+- Optimization                   : -O0
+- Target                         : Program flash action using PEMicro probes
+- Total Size Before Optimization : 19708
+- Total Size After Optimization  : 
+- Timing Test Before Optimization: 8752 ms
+- Timing Test After Optimization : 7941 ms
+
+# pbkdf2_hmac_isha()
+- Size Before Optimization: 0x00000108
+- Size After Optimization: 
+- Changes:
+	- 
 - During time_pbkdf2_hmac_isha(), the function pbkdf2_hmac_isha() is invoked from 1 separate line:
 
-| Count | Total Time | Average Time Per Invocation | Caller                | Invocation Details |
-| ----- | ---------- | --------------------------- | --------------------- | ------------------ |
-| 1     | 8742.0 ms  | 8742.000 ms                 | time_pbkdf2_hmac_isha | Unconditional      |
+| Count | Total Time Before Optimization (Deep : Surface) | Total Time After Optimization (Deep : Surface) | Caller                | Invocation Details         |
+| ----- | ----------------------------------------------- | ---------------------------------------------- | --------------------- | -------------------------- |
+| 1     | 8752 ms : 0 ms                                  | 8752 ms : 0 ms                                 | time_pbkdf2_hmac_isha | Unconditional              |
 
-# pbkdf2_hmac_isha() - Modified
-- Size: 0x00000128
-- During time_pbkdf2_hmac_isha(), the function pbkdf2_hmac_isha() is invoked from 1 separate line:
-
-| Count | Total Time | Average Time Per Invocation | Caller                | Invocation Details |
-| ----- | ---------- | --------------------------- | --------------------- | ------------------ |
-| 1     | 7931.0 ms  | 7931.000 ms                 | time_pbkdf2_hmac_isha | Unconditional      |
-
-# F() - Original
-- Size: 0x000001d0
+# F()
+- Size Before Optimization: 0x000001b8
+- Size After Optimization: 
+- Changes:
+	- 
 - During time_pbkdf2_hmac_isha(), the function F() is invoked from 1 separate line:
 
-| Count | Total Time | Average Time Per Invocation | Caller           | Invocation Details       |
-| ----- | ---------- | --------------------------- | ---------------- | ------------------------ |
-| 42    | 9482.0 ms  | 225.762 ms                  | pbkdf2_hmac_isha | For int i=0; i<l; i++    |
+| Count | Total Time Before Optimization (Deep : Surface) | Total Time After Optimization (Deep : Surface) | Caller                | Invocation Details         |
+| ----- | ----------------------------------------------- | ---------------------------------------------- | --------------------- | -------------------------- |
+| 3     | 8752 ms : 362 ms                                | 8752 ms : 362 ms                               | pbkdf2_hmac_isha      | For int i=0; i<l; i++      |
 
-# F() - Modified
-
-
-# hmac_isha() - Original
-- Size: 0x00000184
-- During time_pbkdf2_hmac_isha(), the function hmac_isha() is invoked from 2 separate lines:
-
-| Count | Total Time | Average Time Per Invocation | Caller         | Invocation Details       |
-| ----- | ---------- | --------------------------- | -------------- | ------------------------ |
-| 42    | 28.1 ms    | 0.669 ms                    | F              | Unconditional            |
-| 13285 | 9124.9 ms  | 0.687 ms                    | F              | For int j=1; j<iter; j++ |
-
-# hmac_isha() - Modified
-- Size: 0x00000112
+# hmac_isha()
+- Size Before Optimization: 0x00000184
+- Size After Optimization: 0x00000112
 - Changes made:
 	- Removed if(key_len > ISHA_BLOCKLEN) conditional since code does not ever go into this branch. This introduces limitation of catching case where key_len > ISHA_BLOCKLEN
 	- Combined for(i=0; i<key_len; i++) and for(i=key_len; i<ISHA_BLOCKLEN; i++) loops and added a conditional within loop itself
@@ -69,98 +65,73 @@ main
 	- Removed keypad array and assigned directly to ipad + opad
 - During time_pbkdf2_hmac_isha(), the function hmac_isha() is invoked from 2 separate lines:
 
-| Count | Total Time | Average Time Per Invocation | Caller         | Invocation Details       |
-| ----- | ---------- | --------------------------- | -------------- | ------------------------ |
-| 42    | 26.0 ms    | 0.619 ms                    | F              | Unconditional            |
-| 13285 | 8266.1 ms  | 0.622 ms                    | F              | For int j=1; j<iter; j++ |
+| Count | Total Time Before Optimization (Deep : Surface) | Total Time After Optimization (Deep : Surface) | Caller                | Invocation Details         |
+| ----- | ----------------------------------------------- | ---------------------------------------------- | --------------------- | -------------------------- |
+| 3     | 2    ms : 0    ms                               | 1    ms : 0   ms                               | F                     | Unconditional              |
+| 12285 | 8461 ms : 1428 ms                               | 7632 ms : 936 ms                               | F                     | For int j=1; j<iter; j++   |
 
-# ISHAReset() - Original
-- Size: 0x00000060
+# ISHAReset()
+- Size Before Optimization: 0x00000060
+- Size After Optimization: 
+- Changes:
+	- 
 - During time_pbkdf2_hmac_isha(), the function ISHAReset() is invoked from 3 separate lines:
 
-| Count | Total Time | Average Time Per Invocation | Caller    | Invocation Details         |
-| ----- | ---------- | --------------------------- | --------- | -------------------------- |
-| 0     | 0.0 ms     | 0.000 ms                    | hmac_isha | If key_len > ISHA_BLOCKLEN |
-| 13330 | 24.8 ms    | 0.002 ms                    | hmac_isha | Inner ISHA                 |
-| 13330 | 27.1 ms    | 0.002 ms                    | hmac_isha | Outer ISHA                 |
+| Count | Total Time Before Optimization (Deep : Surface) | Total Time After Optimization (Deep : Surface) | Caller                | Invocation Details         |
+| ----- | ----------------------------------------------- | ---------------------------------------------- | --------------------- | -------------------------- |
+| 0     | 0  ms : 0  ms                                   | 0  ms : 0  ms                                  | hmac_isha             | If key_len > ISHA_BLOCKLEN |
+| 12288 | 28 ms : 28 ms                                   | 28 ms : 28 ms                                  | hmac_isha             | Inner ISHA                 |
+| 12288 | 28 ms : 28 ms                                   | 28 ms : 28 ms                                  | hmac_isha             | Outer ISHA                 |
 
-# ISHAReset() - Modified
-
-
-# ISHAInput() - Original
-- Size: 0x000000ae
+# ISHAInput()
+- Size Before Optimization: 0x000000ae
+- Size After Optimization: 
+- Changes:
+	- 
 - During time_pbkdf2_hmac_isha(), the function ISHAInput() is invoked from 5 separate lines:
 
-| Count | Total Time | Average Time Per Invocation | Caller    | Invocation Details         |
-| ----- | ---------- | --------------------------- | --------- | -------------------------- |
-| 0     | 0.0 ms     | 0.000 ms                    | hmac_isha | If key_len > ISHA_BLOCKLEN |
-| 13330 | 2171.9 ms  | 0.163 ms                    | hmac_isha | Inner ISHA - ipad          |
-| 13330 | 444.8 ms   | 0.033 ms                    | hmac_isha | Inner ISHA - msg           |
-| 13330 | 2171.7 ms  | 0.163 ms                    | hmac_isha | Outer ISHA - opad          |
-| 13330 | 444.6 ms   | 0.033 ms                    | hmac_isha | Outer ISHA - inner_digest  |
+| Count | Total Time Before Optimization (Deep : Surface) | Total Time After Optimization (Deep : Surface) | Caller                | Invocation Details         |
+| ----- | ----------------------------------------------- | ---------------------------------------------- | --------------------- | -------------------------- |
+| 0     | 0    ms : 0    ms                               | 0    ms : 0    ms                              | hmac_isha             | If key_len > ISHA_BLOCKLEN |
+| 12288 | 1996 ms : 1250 ms                               | 1996 ms : 1250 ms                              | hmac_isha             | Inner ISHA - ipad          |
+| 12288 | 417  ms : 399  ms                               | 417  ms : 399  ms                              | hmac_isha             | Inner ISHA - msg           |
+| 12288 | 2000 ms : 1249 ms                               | 2000 ms : 1249 ms                              | hmac_isha             | Outer ISHA - opad          |
+| 12288 | 417  ms : 409  ms                               | 417  ms : 409  ms                              | hmac_isha             | Outer ISHA - inner_digest  |
 
-# ISHAInput() - Modified
-
-
-# ISHAResult() - Original
-- Size: 0x000000c0
-- During time_pbkdf2_hmac_isha(), the function ISHAResult() is invoked from 3 separate lines:
-
-| Count | Total Time | Average Time Per Invocation | Caller    | Invocation Details         |
-| ----- | ---------- | --------------------------- | --------- | -------------------------- |
-| 0     | 0.0 ms     | 0.000 ms                    | hmac_isha | If key_len > ISHA_BLOCKLEN |
-| 13330 | 1183.9 ms  | 0.089 ms                    | hmac_isha | Inner ISHA                 |
-| 13330 | 1183.6 ms  | 0.089 ms                    | hmac_isha | Outer ISHA                 |
-
-# ISHAResult() - Modified
-- Size: 0x000000a0
+# ISHAResult()
+- Size Before Optimization: 0x000000c0
+- Size After Optimization: 0x000000a0
 - Changes made:
 	- Replaced all instances of (i/4) with (t >> 2)
 - During time_pbkdf2_hmac_isha(), the function ISHAResult() is invoked from 3 separate lines:
 
-| Count | Total Time | Average Time Per Invocation | Caller    | Invocation Details         |
-| ----- | ---------- | --------------------------- | --------- | -------------------------- |
-| 0     | 0.0 ms     | 0.000 ms                    | hmac_isha | If key_len > ISHA_BLOCKLEN |
-| 13330 | 1099.0 ms  | 0.082 ms                    | hmac_isha | Inner ISHA                 |
-| 13330 | 1106.3 ms  | 0.083 ms                    | hmac_isha | Outer ISHA                 |
+| Count | Total Time Before Optimization (Deep : Surface) | Total Time After Optimization (Deep : Surface) | Caller                | Invocation Details         |
+| ----- | ----------------------------------------------- | ---------------------------------------------- | --------------------- | -------------------------- |
+| 0     | 0    ms : 0   ms                                | N/A                                            | hmac_isha             | If key_len > ISHA_BLOCKLEN |
+| 12288 | 1089 ms : 148 ms                                | 1005 ms : 118 ms                               | hmac_isha             | Inner ISHA                 |
+| 12288 | 1089 ms : 148 ms                                | 1042 ms : 130 ms                               | hmac_isha             | Outer ISHA                 |
 
-# ISHAPadMessage() - Original
-- Size: 0x0000010e
-- During time_pbkdf2_hmac_isha(), the function ISHAPadMessage() is invoked from 1 separate line:
-
-| Count | Total Time | Average Time Per Invocation | Caller     | Invocation Details |
-| ----- | ---------- | --------------------------- | ---------- | ------------------ |
-| 26668 | 2066.9 ms  | 0.078 ms                    | ISHAResult | If !ctx->Computed  |
-
-# ISHAPadMessage() - Modified
-- Size: 0x000000f2
+# ISHAPadMessage()
+- Size Before Optimization: 0x0000010e
+- Size After Optimization: 0x000000f2
 - Changes made:
 	- Removed while(ctx->MB_Idx < 56) loops out of if/else and put it after since it is unconditional
 - During time_pbkdf2_hmac_isha(), the function ISHAPadMessage() is invoked from 1 separate line:
 
-| Count | Total Time | Average Time Per Invocation | Caller     | Invocation Details |
-| ----- | ---------- | --------------------------- | ---------- | ------------------ |
-| 26668 | 2066.9 ms  | 0.078 ms                    | ISHAResult | If !ctx->Computed  |
+| Count | Total Time Before Optimization (Deep : Surface) | Total Time After Optimization (Deep : Surface) | Caller                | Invocation Details         |
+| ----- | ----------------------------------------------- | ---------------------------------------------- | --------------------- | -------------------------- |
+| 24576 | 1902 ms : 472 ms                                | 1794 ms : 494 ms                               | ISHAResult            | If !ctx->Computed          |
 
-# ISHAProcessMessageBlock() - Original
-- Size: 0x00000152
-- During time_pbkdf2_hmac_isha(), the function ISHAProcessMessageBlock() is invoked from 3 separate lines:
-
-| Count | Total Time | Average Time Per Invocation | Caller         | Invocation Details   |
-| ----- | ---------- | --------------------------- | -------------- | -------------------- |
-| 26666 | 1574.6 ms  | 0.059 ms                    | ISHAInput      | If ctx->MB_Idx == 64 |
-| 2     | 2.0 ms     | 1.000 ms                    | ISHAPadMessage | If ctx->MB_Idx > 55  |
-| 26668 | 1536.5 ms  | 0.058 ms                    | ISHAPadMessage | Unconditional        |
-
-# ISHAProcessMessageBlock() - Modified
-- Size: 0x0000013e
+# ISHAProcessMessageBlock
+- Size Before Optimization: 0x00000152
+- Size After Optimization: 0x0000013e
 - Changes made:
 	- Replaced all instances of (t * 4) with (t << 2)
 	- Combined both for(t = 0; t < 16; t++) loops
 - During time_pbkdf2_hmac_isha(), the function ISHAProcessMessageBlock() is invoked from 3 separate lines:
 
-| Count | Total Time | Average Time Per Invocation | Caller         | Invocation Details   |
-| ----- | ---------- | --------------------------- | -------------- | -------------------- |
-| 26666 | 1443.9 ms  | 0.054 ms                    | ISHAInput      | If ctx->MB_Idx == 64 |
-| 2     | 1.0 ms     | 0.500 ms                    | ISHAPadMessage | If ctx->MB_Idx > 55  |
-| 26668 | 1445.0 ms  | 0.054 ms                    | ISHAPadMessage | Unconditional        |
+| Count | Total Time Before Optimization (Deep : Surface) | Total Time After Optimization (Deep : Surface) | Caller                | Invocation Details         |
+| ----- | ----------------------------------------------- | ---------------------------------------------- | --------------------- | -------------------------- |
+| 24576 | 1404 ms : 1404 ms                               | 1319 ms : 1319 ms                              | ISHAInput             | If ctx->MB_Idx == 64       |
+| 0     | 0    ms : 0    ms                               | 0    ms : 0    ms                              | ISHAPadMessage        | If ctx->MB_Idx > 55        |
+| 24576 | 1462 ms : 1462 ms                               | 1325 ms : 1325 ms                              | ISHAPadMessage        | Unconditional              |
