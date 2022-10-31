@@ -70,6 +70,7 @@ static unsigned char hexdigit_to_int(char c)
   if (c >= '0' && c <= '9')
     return c - '0';
   assert(0);
+  return 0;
 }
 
 
