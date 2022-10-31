@@ -129,14 +129,15 @@ static void ISHAPadMessage(ISHAContext *ctx)
   /*
    *  Store the message length as the last 8 octets
    */
-  ctx->MBlock[56] = (ctx->Length_High >> 24) & 0xFF;
-  ctx->MBlock[57] = (ctx->Length_High >> 16) & 0xFF;
-  ctx->MBlock[58] = (ctx->Length_High >> 8) & 0xFF;
-  ctx->MBlock[59] = (ctx->Length_High) & 0xFF;
-  ctx->MBlock[60] = (ctx->Length_Low >> 24) & 0xFF;
-  ctx->MBlock[61] = (ctx->Length_Low >> 16) & 0xFF;
-  ctx->MBlock[62] = (ctx->Length_Low >> 8) & 0xFF;
-  ctx->MBlock[63] = (ctx->Length_Low) & 0xFF;
+
+  ctx->MBlock[56] = 0;
+  ctx->MBlock[57] = 0;
+  ctx->MBlock[58] = 0;
+  ctx->MBlock[59] = 0;
+  ctx->MBlock[60] = ((ctx->Length_Bytes << 3) >> 24) & 0xFF;
+  ctx->MBlock[61] = ((ctx->Length_Bytes << 3) >> 16) & 0xFF;
+  ctx->MBlock[62] = ((ctx->Length_Bytes << 3) >> 8) & 0xFF;
+  ctx->MBlock[63] = ((ctx->Length_Bytes << 3)) & 0xFF;
 
   ISHAProcessMessageBlock(ctx);
 }
@@ -144,8 +145,7 @@ static void ISHAPadMessage(ISHAContext *ctx)
 
 void ISHAReset(ISHAContext *ctx)
 {
-  ctx->Length_Low  = 0;
-  ctx->Length_High = 0;
+  ctx->Length_Bytes = 0;
   ctx->MB_Idx      = 0;
 
   ctx->MD[0]       = 0x67452301;
@@ -194,21 +194,7 @@ void ISHAInput(ISHAContext *ctx, const uint8_t *message_array, size_t length)
   while(i--)
   {
     ctx->MBlock[ctx->MB_Idx++] = (*(message_array++) & 0xFF);
-
-    ctx->Length_Low += 8;
-    /* Force it to 32 bits */
-    ctx->Length_Low &= 0xFFFFFFFF;
-    if (ctx->Length_Low == 0)
-    {
-      ctx->Length_High++;
-      /* Force it to 32 bits */
-      ctx->Length_High &= 0xFFFFFFFF;
-      if (ctx->Length_High == 0)
-      {
-        /* Message is too long */
-    	break;
-      }
-    }
+    ctx->Length_Bytes++;
 
     if (ctx->MB_Idx == 64)
     {

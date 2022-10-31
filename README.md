@@ -33,7 +33,7 @@ main()
 - Total Size Before Optimization : 19708
 - Total Size After Optimization  : 
 - Timing Test Before Optimization: 8752 ms
-- Timing Test After Optimization : 5735 ms
+- Timing Test After Optimization : 4694 ms
 
 # pbkdf2_hmac_isha()
 - Size Before Optimization: 0x00000108
@@ -79,13 +79,14 @@ main()
 - Size After Optimization: 
 - Changes:
 	- Removed ctx->corrupted flag
+	- Removed logic for Length_High/Length_Low bits and replaced with Length_Bytes
 - During time_pbkdf2_hmac_isha(), the function ISHAReset() is invoked from 3 separate lines:
 
 | Count | Total Time Before Optimization (Deep : Surface) | Total Time After Optimization (Deep : Surface) | Caller                | Invocation Details         |
 | ----- | ----------------------------------------------- | ---------------------------------------------- | --------------------- | -------------------------- |
 | 0     | 0  ms : 0  ms                                   | N/A                                            | hmac_isha             | If key_len > ISHA_BLOCKLEN |
-| 12288 | 28 ms : 28 ms                                   | 28 ms : 28 ms                                  | hmac_isha             | Inner ISHA                 |
-| 12288 | 28 ms : 28 ms                                   | 28 ms : 28 ms                                  | hmac_isha             | Outer ISHA                 |
+| 12288 | 28 ms : 28 ms                                   | 26 ms : 26 ms                                  | hmac_isha             | Inner ISHA                 |
+| 12288 | 28 ms : 28 ms                                   | 26 ms : 26 ms                                  | hmac_isha             | Outer ISHA                 |
 
 # ISHAInput()
 - Size Before Optimization: 0x000000ae
@@ -94,15 +95,16 @@ main()
 	- Stored length into register iterator i and replaced all instances of length with iterator i
 	- Removed ctx->corrupted flag
 	- Incremented message_length in-line
+	- Removed logic for Length_High/Length_Low bits and replaced with Length_Bytes
 - During time_pbkdf2_hmac_isha(), the function ISHAInput() is invoked from 5 separate lines:
 
 | Count | Total Time Before Optimization (Deep : Surface) | Total Time After Optimization (Deep : Surface) | Caller                | Invocation Details         |
 | ----- | ----------------------------------------------- | ---------------------------------------------- | --------------------- | -------------------------- |
 | 0     | 0    ms : 0    ms                               | N/A                                            | hmac_isha             | If key_len > ISHA_BLOCKLEN |
-| 12288 | 1996 ms : 1250 ms                               |  ms :  ms                              | hmac_isha             | Inner ISHA - ipad          |
-| 12288 | 417  ms : 399  ms                               |   ms :   ms                              | hmac_isha             | Inner ISHA - msg           |
-| 12288 | 2000 ms : 1249 ms                               |  ms :  ms                              | hmac_isha             | Outer ISHA - opad          |
-| 12288 | 417  ms : 409  ms                               |   ms :   ms                              | hmac_isha             | Outer ISHA - inner_digest  |
+| 12288 | 1996 ms : 1250 ms                               | 1115 ms : 735 ms                               | hmac_isha             | Inner ISHA - ipad          |
+| 12288 | 417  ms : 399  ms                               | 239  ms : 254 ms                               | hmac_isha             | Inner ISHA - msg           |
+| 12288 | 2000 ms : 1249 ms                               | 1115 ms : 736 ms                               | hmac_isha             | Outer ISHA - opad          |
+| 12288 | 417  ms : 409  ms                               | 245  ms : 246  ms                              | hmac_isha             | Outer ISHA - inner_digest  |
 
 # ISHAResult()
 - Size Before Optimization: 0x000000c0
@@ -115,19 +117,20 @@ main()
 | Count | Total Time Before Optimization (Deep : Surface) | Total Time After Optimization (Deep : Surface) | Caller                | Invocation Details         |
 | ----- | ----------------------------------------------- | ---------------------------------------------- | --------------------- | -------------------------- |
 | 0     | 0    ms : 0   ms                                | N/A                                            | hmac_isha             | If key_len > ISHA_BLOCKLEN |
-| 12288 | 1089 ms : 148 ms                                | 745 ms : 125 ms                               | hmac_isha             | Inner ISHA                 |
-| 12288 | 1089 ms : 148 ms                                | 745 ms : 125 ms                               | hmac_isha             | Outer ISHA                 |
+| 12288 | 1089 ms : 148 ms                                | 730 ms : 116 ms                                | hmac_isha             | Inner ISHA                 |
+| 12288 | 1089 ms : 148 ms                                | 743 ms : 123 ms                                | hmac_isha             | Outer ISHA                 |
 
 # ISHAPadMessage()
 - Size Before Optimization: 0x0000010e
 - Size After Optimization: 0x000000f2
 - Changes:
 	- Removed while(ctx->MB_Idx < 56) loops out of if/else and put it after since it is unconditional
+	- Removed logic for Length_High/Length_Low bits and replaced with Length_Bytes. This introduces limitation of not supporting message length over 0xFFFFFFFF bytes
 - During time_pbkdf2_hmac_isha(), the function ISHAPadMessage() is invoked from 1 separate line:
 
 | Count | Total Time Before Optimization (Deep : Surface) | Total Time After Optimization (Deep : Surface) | Caller                | Invocation Details         |
 | ----- | ----------------------------------------------- | ---------------------------------------------- | --------------------- | -------------------------- |
-| 24576 | 1902 ms : 472 ms                                | 1794 ms : 494 ms                               | ISHAResult            | If !ctx->Computed          |
+| 24576 | 1902 ms : 472 ms                                | 1264 ms : 457 ms                               | ISHAResult            | If !ctx->Computed          |
 
 # ISHAProcessMessageBlock
 - Size Before Optimization: 0x00000152
