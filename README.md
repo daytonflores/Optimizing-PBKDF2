@@ -31,13 +31,13 @@ main()
 - Optimization                   : -O0
 - Target                         : Program flash action using PEMicro probes
 - Total Size Before Optimization : 19708
-- Total Size After Optimization  : 
+- Total Size After Optimization  : 15200
 - Timing Test Before Optimization: 8752 ms
 - Timing Test After Optimization : 3040 ms
 
 # pbkdf2_hmac_isha()
 - Size Before Optimization: 0x00000108
-- Size After Optimization: 
+- Size After Optimization: 0x00000108
 - Changes:
 	- None
 - During time_pbkdf2_hmac_isha(), the function pbkdf2_hmac_isha() is invoked from 1 separate line:
@@ -48,7 +48,7 @@ main()
 
 # F()
 - Size Before Optimization: 0x000001b8
-- Size After Optimization: 
+- Size After Optimization: 0x00000134
 - Changes:
 	- Defined iterator i as register storage
 	- Used same iterator i in all loops (other than loop using iterator j) rather than having each loop declare its own iterator i
@@ -60,7 +60,7 @@ main()
 
 # hmac_isha()
 - Size Before Optimization: 0x00000184
-- Size After Optimization: 0x00000112
+- Size After Optimization: 0x000000c2
 - Changes:
 	- Removed if(key_len > ISHA_BLOCKLEN) conditional since code does not ever go into this branch. This introduces limitation of catching case where key_len > ISHA_BLOCKLEN
 	- Combined for(i=0; i<key_len; i++) and for(i=key_len; i<ISHA_BLOCKLEN; i++) loops and added a conditional within loop itself
@@ -76,7 +76,7 @@ main()
 
 # ISHAReset()
 - Size Before Optimization: 0x00000060
-- Size After Optimization: 
+- Size After Optimization: 0x00000054
 - Changes:
 	- Removed ctx->corrupted flag
 	- Removed logic for Length_High/Length_Low bits and replaced with Length_Bytes
@@ -90,7 +90,7 @@ main()
 
 # ISHAInput()
 - Size Before Optimization: 0x000000ae
-- Size After Optimization: 
+- Size After Optimization: 0x000000c8
 - Changes:
 	- Stored length into register iterator i and replaced all instances of length with iterator i
 	- Removed ctx->corrupted flag
@@ -109,7 +109,7 @@ main()
 
 # ISHAResult()
 - Size Before Optimization: 0x000000c0
-- Size After Optimization: 0x000000a0
+- Size After Optimization: 0x00000096
 - Changes:
 	- Replaced all instances of (i/4) with (t >> 2)
 	- Removed ctx->corrupted flag
@@ -123,7 +123,7 @@ main()
 
 # ISHAPadMessage()
 - Size Before Optimization: 0x0000010e
-- Size After Optimization: 0x000000f2
+- Size After Optimization: 0x000000e6
 - Changes:
 	- Removed while(ctx->MB_Idx < 56) loops out of if/else and put it after since it is unconditional
 	- Removed logic for Length_High/Length_Low bits and replaced with Length_Bytes. This introduces limitation of not supporting message length over 0xFFFFFFFF bytes
@@ -135,7 +135,7 @@ main()
 
 # ISHAProcessMessageBlock
 - Size Before Optimization: 0x00000152
-- Size After Optimization: 0x0000013e
+- Size After Optimization: 0x000000e6
 - Changes:
 	- Replaced all instances of (t * 4) with (t << 2)
 	- Combined both for(t = 0; t < 16; t++) loops

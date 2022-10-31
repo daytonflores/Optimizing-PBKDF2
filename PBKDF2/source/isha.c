@@ -22,28 +22,6 @@
 
 #define MAX_MESSAGE_BLOCK_BYTES (64)
 
-extern volatile int Count_0;
-extern volatile int Count_1;
-extern volatile int Count_2;
-extern volatile int Count_3;
-extern volatile int Count_4;
-extern volatile int Count_5;
-extern volatile int Count_6;
-extern volatile int Count_7;
-extern volatile int Count_8;
-extern volatile int Count_9;
-
-extern volatile ticktime_t Duration_0;
-extern volatile ticktime_t Duration_1;
-extern volatile ticktime_t Duration_2;
-extern volatile ticktime_t Duration_3;
-extern volatile ticktime_t Duration_4;
-extern volatile ticktime_t Duration_5;
-extern volatile ticktime_t Duration_6;
-extern volatile ticktime_t Duration_7;
-extern volatile ticktime_t Duration_8;
-extern volatile ticktime_t Duration_9;
-
 /*  
  * Processes the next 512 bits of the message stored in the MBlock
  * array.
