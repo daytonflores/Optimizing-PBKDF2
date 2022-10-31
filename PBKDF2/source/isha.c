@@ -9,6 +9,8 @@
  * https://www.packetizer.com/security/sha1/
  */
 
+#include <string.h>
+
 #include "isha.h"
 #include "ticktime.h"
 
@@ -17,6 +19,8 @@
  */
 #define ISHACircularShift(bits,word) \
   ((((word) << (bits)) & 0xFFFFFFFF) | ((word) >> (32-(bits))))
+
+#define MAX_MESSAGE_BLOCK_BYTES (64)
 
 extern volatile int Count_0;
 extern volatile int Count_1;
@@ -191,16 +195,31 @@ void ISHAInput(ISHAContext *ctx, const uint8_t *message_array, size_t length)
     return;
   }
 
-  while(i--)
+  /*
+   *  If pending block to be copied overflows past 64 bytes, copy the pending block
+   *  and then process the message block
+   */
+  while(ctx->MB_Idx + i > MAX_MESSAGE_BLOCK_BYTES)
   {
-    ctx->MBlock[ctx->MB_Idx++] = (*(message_array++) & 0xFF);
-    ctx->Length_Bytes++;
+	memcpy(ctx->MBlock + ctx->MB_Idx, message_array, MAX_MESSAGE_BLOCK_BYTES - ctx->MB_Idx);
+	i -= MAX_MESSAGE_BLOCK_BYTES - ctx->MB_Idx;
+	message_array += MAX_MESSAGE_BLOCK_BYTES - ctx->MB_Idx;
+	ctx->Length_Bytes += MAX_MESSAGE_BLOCK_BYTES - ctx->MB_Idx;
+	ctx->MB_Idx = MAX_MESSAGE_BLOCK_BYTES - ctx->MB_Idx;
+	ISHAProcessMessageBlock(ctx);
+  }
 
-    if (ctx->MB_Idx == 64)
-    {
-      ISHAProcessMessageBlock(ctx);
-    }
-
+  /*
+   *  If pending block after all multiples of 64-byte sized blocks have
+   *  been copied, memcpy the remaining message bytes
+   */
+  if(i > 0)
+  {
+	memcpy(ctx->MBlock + ctx->MB_Idx, message_array, i);
+	ctx->MB_Idx += i;
+	message_array += i;
+	ctx->Length_Bytes += i;
+	i = 0;
   }
 }
 

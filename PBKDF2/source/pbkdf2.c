@@ -67,6 +67,7 @@ void hmac_isha(const uint8_t *key, size_t key_len,
   ISHAInput(&ctx, msg, msg_len);
   ISHAResult(&ctx, inner_digest);
 
+
   // perform outer ISHA
   ISHAReset(&ctx);
   ISHAInput(&ctx, opad, ISHA_BLOCKLEN);

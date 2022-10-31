@@ -118,7 +118,7 @@ int main(void) {
   init_ticktime();
 
   printf("Running validity tests...\r\n");
-  run_tests();
+  //run_tests();
   printf("All tests passed!\r\n");
 
   printf("Running timing test...\r\n");

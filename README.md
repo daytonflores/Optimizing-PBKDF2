@@ -33,7 +33,7 @@ main()
 - Total Size Before Optimization : 19708
 - Total Size After Optimization  : 
 - Timing Test Before Optimization: 8752 ms
-- Timing Test After Optimization : 4694 ms
+- Timing Test After Optimization : 3040 ms
 
 # pbkdf2_hmac_isha()
 - Size Before Optimization: 0x00000108
@@ -44,7 +44,7 @@ main()
 
 | Count | Total Time Before Optimization (Deep : Surface) | Total Time After Optimization (Deep : Surface) | Caller                | Invocation Details         |
 | ----- | ----------------------------------------------- | ---------------------------------------------- | --------------------- | -------------------------- |
-| 1     | 8752 ms : 0 ms                                  | 8752 ms : 0 ms                                 | time_pbkdf2_hmac_isha | Unconditional              |
+| 1     | 8752 ms : 0 ms                                  | 3040 ms : 0 ms                                 | time_pbkdf2_hmac_isha | Unconditional              |
 
 # F()
 - Size Before Optimization: 0x000001b8
@@ -56,7 +56,7 @@ main()
 
 | Count | Total Time Before Optimization (Deep : Surface) | Total Time After Optimization (Deep : Surface) | Caller                | Invocation Details         |
 | ----- | ----------------------------------------------- | ---------------------------------------------- | --------------------- | -------------------------- |
-| 3     | 8752 ms : 362 ms                                | 7261 ms : 137 ms                               | pbkdf2_hmac_isha      | For int i=0; i<l; i++      |
+| 3     | 8752 ms : 362 ms                                | 3040 ms : 137 ms                               | pbkdf2_hmac_isha      | For int i=0; i<l; i++      |
 
 # hmac_isha()
 - Size Before Optimization: 0x00000184
@@ -71,8 +71,8 @@ main()
 
 | Count | Total Time Before Optimization (Deep : Surface) | Total Time After Optimization (Deep : Surface) | Caller                | Invocation Details         |
 | ----- | ----------------------------------------------- | ---------------------------------------------- | --------------------- | -------------------------- |
-| 3     | 2    ms : 0    ms                               | 1    ms : 0   ms                               | F                     | Unconditional              |
-| 12285 | 8461 ms : 1428 ms                               | 7137 ms : 402 ms                               | F                     | For int j=1; j<iter; j++   |
+| 3     | 2    ms : 0    ms                               | 0    ms : 0   ms                               | F                     | Unconditional              |
+| 12285 | 8461 ms : 1428 ms                               | 2916 ms : 363 ms                               | F                     | For int j=1; j<iter; j++   |
 
 # ISHAReset()
 - Size Before Optimization: 0x00000060
@@ -96,15 +96,16 @@ main()
 	- Removed ctx->corrupted flag
 	- Incremented message_length in-line
 	- Removed logic for Length_High/Length_Low bits and replaced with Length_Bytes
+	- Improved loop to go 1 byte at a time to 64 bytes at a time. Also utilized memcpy to achieve this
 - During time_pbkdf2_hmac_isha(), the function ISHAInput() is invoked from 5 separate lines:
 
 | Count | Total Time Before Optimization (Deep : Surface) | Total Time After Optimization (Deep : Surface) | Caller                | Invocation Details         |
 | ----- | ----------------------------------------------- | ---------------------------------------------- | --------------------- | -------------------------- |
 | 0     | 0    ms : 0    ms                               | N/A                                            | hmac_isha             | If key_len > ISHA_BLOCKLEN |
-| 12288 | 1996 ms : 1250 ms                               | 1115 ms : 735 ms                               | hmac_isha             | Inner ISHA - ipad          |
-| 12288 | 417  ms : 399  ms                               | 239  ms : 254 ms                               | hmac_isha             | Inner ISHA - msg           |
-| 12288 | 2000 ms : 1249 ms                               | 1115 ms : 736 ms                               | hmac_isha             | Outer ISHA - opad          |
-| 12288 | 417  ms : 409  ms                               | 245  ms : 246  ms                              | hmac_isha             | Outer ISHA - inner_digest  |
+| 12288 | 1996 ms : 1250 ms                               | 57  ms : 66 ms                                 | hmac_isha             | Inner ISHA - ipad          |
+| 12288 | 417  ms : 399  ms                               | 459 ms : 74 ms                                 | hmac_isha             | Inner ISHA - msg           |
+| 12288 | 2000 ms : 1249 ms                               | 65  ms : 66 ms                                 | hmac_isha             | Outer ISHA - opad          |
+| 12288 | 417  ms : 409  ms                               | 467 ms : 74  ms                                | hmac_isha             | Outer ISHA - inner_digest  |
 
 # ISHAResult()
 - Size Before Optimization: 0x000000c0
@@ -117,8 +118,8 @@ main()
 | Count | Total Time Before Optimization (Deep : Surface) | Total Time After Optimization (Deep : Surface) | Caller                | Invocation Details         |
 | ----- | ----------------------------------------------- | ---------------------------------------------- | --------------------- | -------------------------- |
 | 0     | 0    ms : 0   ms                                | N/A                                            | hmac_isha             | If key_len > ISHA_BLOCKLEN |
-| 12288 | 1089 ms : 148 ms                                | 730 ms : 116 ms                                | hmac_isha             | Inner ISHA                 |
-| 12288 | 1089 ms : 148 ms                                | 743 ms : 123 ms                                | hmac_isha             | Outer ISHA                 |
+| 12288 | 1089 ms : 148 ms                                | 740 ms : 129 ms                                | hmac_isha             | Inner ISHA                 |
+| 12288 | 1089 ms : 148 ms                                | 740 ms : 128 ms                                | hmac_isha             | Outer ISHA                 |
 
 # ISHAPadMessage()
 - Size Before Optimization: 0x0000010e
@@ -130,7 +131,7 @@ main()
 
 | Count | Total Time Before Optimization (Deep : Surface) | Total Time After Optimization (Deep : Surface) | Caller                | Invocation Details         |
 | ----- | ----------------------------------------------- | ---------------------------------------------- | --------------------- | -------------------------- |
-| 24576 | 1902 ms : 472 ms                                | 1264 ms : 457 ms                               | ISHAResult            | If !ctx->Computed          |
+| 24576 | 1902 ms : 472 ms                                | 1250 ms : 476 ms                               | ISHAResult            | If !ctx->Computed          |
 
 # ISHAProcessMessageBlock
 - Size Before Optimization: 0x00000152
@@ -144,6 +145,6 @@ main()
 
 | Count | Total Time Before Optimization (Deep : Surface) | Total Time After Optimization (Deep : Surface) | Caller                | Invocation Details         |
 | ----- | ----------------------------------------------- | ---------------------------------------------- | --------------------- | -------------------------- |
-| 24576 | 1404 ms : 1404 ms                               | 853 ms : 853 ms                                | ISHAInput             | If ctx->MB_Idx == 64       |
+| 24576 | 1404 ms : 1404 ms                               | 818 ms : 853 ms                                | ISHAInput             | If ctx->MB_Idx == 64       |
 | 0     | 0    ms : 0    ms                               | 0   ms : 0   ms                                | ISHAPadMessage        | If ctx->MB_Idx > 55        |
-| 24576 | 1462 ms : 1462 ms                               | 851 ms : 851 ms                                | ISHAPadMessage        | Unconditional              |
+| 24576 | 1462 ms : 1462 ms                               | 769 ms : 769 ms                                | ISHAPadMessage        | Unconditional              |
